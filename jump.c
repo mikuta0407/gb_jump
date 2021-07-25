@@ -5,6 +5,11 @@
 #include <rand.h>
 #include "projects/player.c"
 #include "projects/enm.c"
+#include "projects/start_screen.h"
+
+// コンパイルコマンド
+// bin\lcc.exe projects\jump.c -o projects\jump.gb
+
 
 // プレイヤー位置初期化
 UBYTE x = 32;
@@ -50,12 +55,12 @@ void main() {
     // START押されたらbreakしてgame();へ
     while(1){
         if (joypad() & J_START){
-            printf("START\n");
+            HIDE_BKG;
             break;
         }
     }
 
-    // game()を実行(isGameOverが1になってbreakされるまで動作)
+    // game()を実行(クリア/ゲームオーバーでbreakされるまで動作)
     game();
 
     // gameがbreakされる=ゲームオーバーなのでgameover()を実行。
@@ -68,7 +73,10 @@ void main() {
 // スタート画面描画
 void start(){
 
-    printf("Push start!\n");
+    set_bkg_data(0, 255, start_screen_tile_data);
+    set_bkg_tiles(0, 0, start_screen_tile_map_width, start_screen_tile_map_height, start_screen_map_data);
+
+    SHOW_BKG;
 }
 
 //ゲーム部分
@@ -85,7 +93,7 @@ void game(){
 
     /* ゲーム処理部分変数 */
     UBYTE loto; // 敵上下位置抽選rand値格納
-    int threshold = 0; //抽選しきい値。 -127~127 +だと上 -だと下
+    int threshold = 64; //抽選しきい値。 -127~127 +だと上 -だと下
 
     // スタート状態管理
     // 0: カウントダウン
