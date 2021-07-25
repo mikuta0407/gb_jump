@@ -266,6 +266,60 @@ void game(){
 }
 
 void gameover(){
-    printf("%d", clear);    
+    
+    int count = 0; //時間カウント
+    int str_x = 5; //文字左端位置
+
+    char congrats_str[10] = "CONGRATS!!";
+    char gameover_str[10] = "GAME OVER!";
+  
+    color(BLACK, WHITE, SOLID);  /* 色を黒に設定 */
+    box(39, 30, 121, 110, M_FILL); /* 塗潰し四角形を描く */
+
+    while(count <= 16){ //16カウント分やる
+
+        //色指定
+        color(3, 0, SOLID);
+
+        //15F毎に処理
+        if (sys_time - prev_time >= 15){
+            
+            prev_time = sys_time;
+
+            //1カウント毎に配列の中の文字を一個ずつ吐いていく
+
+            if (count >= 1 && count <= 11){
+                gotogxy(5 + count - 1, 5);
+                if (clear == 1){ //クリア      
+                    gprintf("%c",congrats_str[count - 1]);
+                }
+
+                if (clear == 0){ //ゲームオーバー
+                    gprintf("%c",gameover_str[count - 1]);
+                }
+            }
+
+            if (count == 13){ //時間表示
+                gotogxy(5, 8);
+                gprintf("TIME: %u", timecount);
+            }
+
+            if (count == 15){ //スコア表示
+                gotogxy(5,11);
+                gprintf("SCORE: %u", score);                
+            }
+
+            count++;
+            
+        }
+
+    }
+    // SELECT押されたらreset()
+    while(1){
+        if (joypad() & J_START){
+            reset();
+        }
+    }
+
 
 }
